@@ -1,0 +1,205 @@
+package PROJECT;
+
+public class Destination {
+    private String AssignedDestination;
+    private double distance;
+
+    public Destination(String AssignedDestination, double distance) {
+        this.AssignedDestination = AssignedDestination;
+        this.distance = distance;
+    }
+    public String getAssignedDestination() {
+        return AssignedDestination;
+    }
+
+
+
+    @Override
+    public String toString() {
+    return " - AssignedDestination: " + AssignedDestination + ", Distance from University: " + distance + " km";
+    }
+}
+package PROJECT;
+
+public class Driver {
+    private String name;
+    private String contactNumber;
+    private int id;
+    private String license;
+
+    public Driver(String name,String contactNumber, int id, String license) {
+        this.name = name;
+        this.contactNumber=contactNumber;
+        this.id = id;
+        this.license = license;
+    }
+    public int getId() {
+        return id;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Driver name: " + name + "  -- Driver ID: " + id + " -- DRIVER Contact number: " + contactNumber + ", License: " + license;
+    }
+
+}
+package PROJECT;
+import java.util.*;
+public class POINTS {
+   protected String pointName;
+    protected List<Driver> drivers = new ArrayList<>();
+    protected List<Destination> destinations = new ArrayList<>();
+
+    public POINTS(String pointName) {
+        this.pointName = pointName;
+    }
+
+    public void addDriver(Driver driver) {
+
+        drivers.add(driver);
+    }
+    public void removeDriverById(int id) {
+        drivers.removeIf(driver -> driver.getId() == id);
+    }
+
+
+    public void addDestination(Destination dest) {
+        destinations.add(dest);
+    }
+    public void removeDestinationByName(String name) {
+        destinations.removeIf(destination -> destination.getAssignedDestination().equalsIgnoreCase(name));
+    }
+
+
+
+   public void printDetails() {
+
+        System.out.println("Drivers:");
+        for (Driver d : drivers) System.out.println(d);;
+        System.out.println("Destinations:");
+        for (Destination d : destinations) System.out.println(d);
+    }
+
+
+}
+package PROJECT;
+
+public class officialPoints extends POINTS{
+    public officialPoints(String pointName) {
+        super(pointName);
+    }
+}
+
+
+
+
+
+
+package PROJECT;
+
+public class shuttlesPoints extends POINTS{
+    public shuttlesPoints(String pointName)
+    {
+        super(pointName);
+    }
+}
+
+package PROJECT;
+
+public class TransportThread extends Thread{
+    private String pointName;
+
+    public TransportThread(String pointName) {
+        this.pointName = pointName;
+    }
+
+    public void run() {
+        System.out.println("Transport from " + pointName + " is now running...");
+        try {
+            Thread.sleep(1000); // Simulate time
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Transport from " + pointName + " has completed the route.");
+    }
+}
+package PROJECT;
+
+public class UniversityTransportSystem {
+    public static void main(String[] args) {
+
+        // Create drivers
+        Driver d1 = new Driver("shahzad malik", "03032894532", 101, "License-101");
+        Driver d2 = new Driver("Arman ", "03121321587", 102, "L-102");
+        Driver d3 = new Driver("Mubeen", "03033332323", 103, "License-103");
+        Driver d4 = new Driver("DAWOOD ", "03022098465", 104, "License-104");
+
+
+        Destination dest1 = new Destination("Qasimabad ", 3.0);
+        Destination dest2 = new Destination("Latifabad", 2.5);
+        Destination dest3 = new Destination("Wadowa", 1.5);
+        Destination dest4 = new Destination("Haider chock", 4.0);
+
+
+        POINTS p1 = new officialPoints("official 0001");
+        POINTS p2 = new officialPoints("Official 0002");
+        POINTS p3 = new shuttlesPoints("Shuttle 0001");
+        POINTS p4 = new shuttlesPoints("Shuttle 0002");
+
+
+        p1.addDriver(d1);
+        p2.addDriver(d2);
+        p3.addDriver(d3);
+        p4.addDriver(d4);
+
+
+        p1.addDestination(dest1);
+        p2.addDestination(dest2);
+        p3.addDestination(dest3);
+        p4.addDestination(dest4);
+        // p1.removeDriverById(101);
+        // p2.removeDestinationByName("Latifabad");//calling remove methods
+
+
+        System.out.println("*");
+        System.out.println("*                                     *");
+        System.out.println("*    UNIVERSITY TRANSPORT MANAGEMENT  *");
+        System.out.println("*               SYSTEM                *");
+        System.out.println("*");
+        System.out.println();
+        System.out.println();
+
+        System.out.println("*");
+        System.out.println("the details of point 1:");
+        System.out.println("*");
+
+        System.out.println();
+        p1.printDetails();
+        System.out.println("*");
+        System.out.println("the details of point 2:");
+        System.out.println("*");
+        System.out.println();
+        p2.printDetails();
+        System.out.println("*");
+        System.out.println("the details of point 3:");
+        System.out.println("*");
+        System.out.println();
+        p3.printDetails();
+        System.out.println("*");
+        System.out.println("the details of point 4:");
+        System.out.println("*");
+        System.out.println();
+        p4.printDetails();
+
+        TransportThread t1 = new TransportThread(p1.pointName);
+        TransportThread t2 = new TransportThread(p2.pointName);
+        TransportThread t3 = new TransportThread(p3.pointName);
+        TransportThread t4 = new TransportThread(p4.pointName);
+
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+    }
+}
